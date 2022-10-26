@@ -20,7 +20,7 @@ public class KakaoClient {
     private String kakaoKey;
 
     public KakaoClient(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("dapi.kakao.com")
+        this.webClient = webClientBuilder.baseUrl("https://dapi.kakao.com")
                 .defaultHeader("Authorization", "KakaoAK 283a7a18acec1b73460173469500bea3").build();
     }
 
