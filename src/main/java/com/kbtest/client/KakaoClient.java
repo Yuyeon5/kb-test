@@ -3,9 +3,11 @@ package com.kbtest.client;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Service
+@Slf4j
 public class KakaoClient {
     private final WebClient webClient;
 
@@ -20,6 +22,8 @@ public class KakaoClient {
                         .queryParam("page", 1).queryParam("size", 5)
                         .build())
                 .retrieve()
-                .bodyToMono(CommonResponse.class);
+                .bodyToMono(CommonResponse.class)
+                .doOnError(throwable -> log.error("kakao search fail - {}", throwable.getMessage()))
+                .onErrorReturn(new CommonResponse());
     }
 }

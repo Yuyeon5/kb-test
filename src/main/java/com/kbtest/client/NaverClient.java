@@ -3,9 +3,11 @@ package com.kbtest.client;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Service
+@Slf4j
 public class NaverClient {
     private final WebClient webClient;
 
@@ -22,6 +24,8 @@ public class NaverClient {
                         .queryParam("display", 5)
                         .build())
                 .retrieve()
-                .bodyToMono(CommonResponse.class);
+                .bodyToMono(CommonResponse.class)
+                .doOnError(throwable -> log.error("naver search fail - {}", throwable.getMessage()))
+                .onErrorReturn(new CommonResponse());
     }
 }

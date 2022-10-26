@@ -17,8 +17,8 @@ public class PlaceController {
     private final PlaceService service;
 
     @GetMapping("/v1/place")
-    public void searchPlace(@RequestParam("q") String keyword) {
-
+    public Mono<CommonResponse> searchPlace(@RequestParam("q") String keyword) {
+        return service.searchPlace(keyword);
     }
 
     @GetMapping("/v1/kakao/place")

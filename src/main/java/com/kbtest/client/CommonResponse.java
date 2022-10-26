@@ -9,13 +9,7 @@ import lombok.Getter;
 
 @Getter
 public class CommonResponse {
-    @JsonProperty("documents")
-    @JsonAlias("items")
-    List<Place> places;
-
-    static class Place {
-        @JsonProperty("place_name")
-        @JsonAlias("title")
-        String name;        
-    }
+    @JsonProperty("places")
+    @JsonAlias({ "documents", "items" })
+    List<CommonPlace> places;
 }
