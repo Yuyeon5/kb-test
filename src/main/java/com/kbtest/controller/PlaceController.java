@@ -25,4 +25,9 @@ public class PlaceController {
     public Mono<KakaoResponse> testKakaoPlace(@RequestParam("q") String keyword) {
         return service.searchKakaoPlace(keyword);
     }
+
+    @GetMapping("/v1/naver/place")
+    public Mono<String> testNaverPlace(@RequestParam("q") String keyword) {
+        return service.searchNaverPlace(keyword);
+    }
 }
