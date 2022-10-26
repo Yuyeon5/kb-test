@@ -3,9 +3,8 @@ package com.kbtest.service;
 import org.springframework.stereotype.Service;
 
 import com.kbtest.client.KakaoClient;
-import com.kbtest.client.KakaoResponse;
+import com.kbtest.client.CommonResponse;
 import com.kbtest.client.NaverClient;
-import com.kbtest.client.NaverResponse;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
@@ -16,11 +15,11 @@ public class PlaceService {
     private final KakaoClient kakaoClient;
     private final NaverClient naverClient;
 
-    public Mono<KakaoResponse> searchKakaoPlace(String keyword) {
+    public Mono<CommonResponse> searchKakaoPlace(String keyword) {
         return kakaoClient.searchPlace(keyword);
     }
 
-    public Mono<NaverResponse> searchNaverPlace(String keyword) {
+    public Mono<CommonResponse> searchNaverPlace(String keyword) {
         return naverClient.searchPlace(keyword);
     }
 }

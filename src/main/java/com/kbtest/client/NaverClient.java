@@ -16,12 +16,12 @@ public class NaverClient {
                 .build();
     }
 
-    public Mono<NaverResponse> searchPlace(String keyword) {
+    public Mono<CommonResponse> searchPlace(String keyword) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/v1/search/local.json").queryParam("query", keyword)
                         .queryParam("display", 5)
                         .build())
                 .retrieve()
-                .bodyToMono(NaverResponse.class);
+                .bodyToMono(CommonResponse.class);
     }
 }

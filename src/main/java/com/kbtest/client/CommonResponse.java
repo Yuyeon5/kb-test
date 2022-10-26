@@ -2,17 +2,20 @@ package com.kbtest.client;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 
 @Getter
-public class KakaoResponse {
+public class CommonResponse {
     @JsonProperty("documents")
-    List<Document> documents;
+    @JsonAlias("items")
+    List<Place> places;
 
-    static class Document {
+    static class Place {
         @JsonProperty("place_name")
-        String placeName;        
+        @JsonAlias("title")
+        String name;        
     }
 }
