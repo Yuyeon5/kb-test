@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kbtest.client.KakaoResponse;
+import com.kbtest.client.NaverResponse;
 import com.kbtest.service.PlaceService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class PlaceController {
     }
 
     @GetMapping("/v1/naver/place")
-    public Mono<String> testNaverPlace(@RequestParam("q") String keyword) {
+    public Mono<NaverResponse> testNaverPlace(@RequestParam("q") String keyword) {
         return service.searchNaverPlace(keyword);
     }
 }

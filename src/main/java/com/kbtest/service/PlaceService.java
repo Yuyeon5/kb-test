@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.kbtest.client.KakaoClient;
 import com.kbtest.client.KakaoResponse;
 import com.kbtest.client.NaverClient;
+import com.kbtest.client.NaverResponse;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
@@ -19,7 +20,7 @@ public class PlaceService {
         return kakaoClient.searchPlace(keyword);
     }
 
-    public Mono<String> searchNaverPlace(String keyword) {
+    public Mono<NaverResponse> searchNaverPlace(String keyword) {
         return naverClient.searchPlace(keyword);
     }
 }
