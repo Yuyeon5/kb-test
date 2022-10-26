@@ -3,6 +3,7 @@ package com.kbtest.service;
 import org.springframework.stereotype.Service;
 
 import com.kbtest.client.KakaoClient;
+import com.kbtest.client.KakaoResponse;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
@@ -12,7 +13,7 @@ import reactor.core.publisher.Mono;
 public class PlaceService {
     private final KakaoClient kakaoClient;
 
-    public Mono<String> searchKakaoPlace(String keyword) {
+    public Mono<KakaoResponse> searchKakaoPlace(String keyword) {
         return kakaoClient.searchPlace(keyword);
     }
 }

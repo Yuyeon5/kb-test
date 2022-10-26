@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kbtest.client.KakaoResponse;
 import com.kbtest.service.PlaceService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class PlaceController {
     }
 
     @GetMapping("/v1/kakao/place")
-    public Mono<String> testKakaoPlace(@RequestParam("q") String keyword) {
+    public Mono<KakaoResponse> testKakaoPlace(@RequestParam("q") String keyword) {
         return service.searchKakaoPlace(keyword);
     }
 }

@@ -14,12 +14,12 @@ public class KakaoClient {
                 .defaultHeader("Authorization", "KakaoAK 283a7a18acec1b73460173469500bea3").build();
     }
 
-    public Mono<String> searchPlace(String keyword) {
+    public Mono<KakaoResponse> searchPlace(String keyword) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/v2/local/search/keyword.json").queryParam("query", keyword)
                         .queryParam("page", 1).queryParam("size", 5)
                         .build())
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(KakaoResponse.class);
     }
 }
