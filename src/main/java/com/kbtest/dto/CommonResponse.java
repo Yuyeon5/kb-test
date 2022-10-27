@@ -1,4 +1,4 @@
-package com.kbtest.client;
+package com.kbtest.dto;
 
 import java.util.ArrayList;
 import java.util.List;

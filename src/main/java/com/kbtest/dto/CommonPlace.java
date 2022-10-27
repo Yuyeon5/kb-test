@@ -1,4 +1,4 @@
-package com.kbtest.client;
+package com.kbtest.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;

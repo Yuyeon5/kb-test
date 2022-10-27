@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.kbtest.client.KakaoClient;
-import com.kbtest.client.CommonPlace;
-import com.kbtest.client.CommonResponse;
 import com.kbtest.client.NaverClient;
+import com.kbtest.dto.CommonPlace;
+import com.kbtest.dto.CommonResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

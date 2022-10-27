@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kbtest.client.CommonResponse;
+import com.kbtest.dto.CommonResponse;
 import com.kbtest.service.PlaceService;
 
 import lombok.RequiredArgsConstructor;
