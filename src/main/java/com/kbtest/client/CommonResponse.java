@@ -1,5 +1,6 @@
 package com.kbtest.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
@@ -13,5 +14,5 @@ import lombok.Setter;
 public class CommonResponse {
     @JsonProperty("places")
     @JsonAlias({ "documents", "items" })
-    List<CommonPlace> places;
+    List<CommonPlace> places = new ArrayList<>();
 }

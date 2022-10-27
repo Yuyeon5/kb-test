@@ -25,29 +25,17 @@ public class PlaceService {
     private final KakaoClient kakaoClient;
     private final NaverClient naverClient;
 
-    private static final String KAKAO = "kakao";
-    private static final String NAVER = "naver";
+    private static final int KAKAO_BIT = 1 << 1;
+    private static final int NAVER_BIT = 1;
 
     private int comparePlace(CommonPlace a, CommonPlace b) {
-        Map<String, Integer> aOrderMap = a.getOrderMap();
-        Map<String, Integer> bOrderMap = b.getOrderMap();
+        int aOrderBit = a.getOrderBit();
+        int bOrderBit = b.getOrderBit();
 
-        int numResultA = aOrderMap.size();
-        int numResultB = bOrderMap.size();
-        int diff = numResultB - numResultA;
-
-        if (diff != 0) {
-            return diff;
-        } else if (aOrderMap.containsKey(KAKAO) && bOrderMap.containsKey(KAKAO)) {
-            return aOrderMap.get(KAKAO) - bOrderMap.get(KAKAO);
-        } else if (aOrderMap.containsKey(NAVER) && bOrderMap.containsKey(NAVER)) {
-            return aOrderMap.get(NAVER) - bOrderMap.get(NAVER);
-        }
-
-        if (aOrderMap.containsKey(KAKAO)) {
-            return -1;
+        if (aOrderBit != bOrderBit) {
+            return bOrderBit - aOrderBit;
         } else {
-            return 1;
+            return a.getOrder() - b.getOrder();
         }
     }
 
@@ -58,47 +46,53 @@ public class PlaceService {
         return Mono.zip(kakaoResult, naverResult).map(tuple -> {
             CommonResponse kakaoResponse = tuple.getT1();
             CommonResponse naverResponse = tuple.getT2();
-
-            if (kakaoResponse == null || CollectionUtils.isEmpty(kakaoResponse.getPlaces())) {
-                log.warn("kakao fails");
-                return naverResponse;
-            } else if (naverResponse == null || CollectionUtils.isEmpty(naverResponse.getPlaces())) {
-                log.warn("naver fails");
-                return kakaoResponse;
-            }
-
             Map<String, CommonPlace> placeMap = new HashMap<>();
-            List<CommonPlace> kakaoPlaces = kakaoResponse.getPlaces();
-            List<CommonPlace> naverPlaces = naverResponse.getPlaces();
+            CommonResponse ret = new CommonResponse();
 
-            for (int i = 0; i < kakaoPlaces.size(); i++) {
-                CommonPlace place = kakaoPlaces.get(i);
-                String replacedName = place.getTitle().replaceAll("\\s", "");
-                place.getOrderMap().put(KAKAO, i);
+            if (kakaoResponse != null && !CollectionUtils.isEmpty(kakaoResponse.getPlaces())) {
+                List<CommonPlace> kakaoPlaces = kakaoResponse.getPlaces();
 
-                placeMap.put(replacedName, place);
-            }
+                for (int i = 0; i < kakaoPlaces.size(); i++) {
+                    CommonPlace place = kakaoPlaces.get(i);
+                    String replacedName = place.getTitle().replaceAll("\\s", "");
 
-            for (int i = 0; i < naverPlaces.size(); i++) {
-                CommonPlace place = naverPlaces.get(i);
-                // Naver result includes <b> and </b>
-                String replacedName = place.getTitle().replaceAll("\\s|\\<[^>]*>", "");
+                    place.setOrder(i);
+                    place.setOrderBit(KAKAO_BIT);
 
-                if (placeMap.containsKey(replacedName)) {
-                    place = placeMap.get(replacedName);
-                } else {
                     placeMap.put(replacedName, place);
                 }
+            }
 
-                place.getOrderMap().put(NAVER, i);
+            if (naverResponse != null && !CollectionUtils.isEmpty(naverResponse.getPlaces())) {
+                List<CommonPlace> naverPlaces = naverResponse.getPlaces();
+
+                for (int i = 0; i < naverPlaces.size(); i++) {
+                    CommonPlace place = naverPlaces.get(i);
+                    // Naver result includes <b> and </b>
+                    String replacedName = place.getTitle().replaceAll("\\s|\\<[^>]*>", "");
+
+                    if (placeMap.containsKey(replacedName)) {
+                        place = placeMap.get(replacedName);
+                        place.setOrderBit(place.getOrderBit() | NAVER_BIT);
+                    } else {
+                        place.setOrder(i);
+                        place.setOrderBit(NAVER_BIT);
+
+                        placeMap.put(replacedName, place);
+                    }
+                }
             }
 
             log.info("merged place count - {}", placeMap.size());
 
+            if (placeMap.isEmpty()) {
+                log.warn("Merged result is empty");
+                return ret;     // empty response
+            }
+
             List<CommonPlace> mergedPlaces = new ArrayList<>(placeMap.values());
             Collections.sort(mergedPlaces, this::comparePlace);
-
-            CommonResponse ret = new CommonResponse();
+            
             ret.setPlaces(mergedPlaces);
 
             return ret;
