@@ -7,17 +7,23 @@
 먼저 ./gradlew bootRun 명령을 사용하여 서버를 실행합니다.
 1. curl 로 테스트를 할 수 있습니다.
 
-  curl -X 'GET' \
+'''
+curl -X 'GET' \
   'http://localhost:8080/v1/place?q=pizza' \
   -H 'accept: */*'
+'''
 
-  curl -X 'GET' \
+'''
+curl -X 'GET' \
   'http://localhost:8080/v1/keywords' \
   -H 'accept: */*'
+'''
 
 2. 스웨거로 접속하여 테스트를 할 수 있습니다.
 
-  http://localhost:8080/swagger-ui.html
+'''
+http://localhost:8080/swagger-ui.html
+'''
 
 ## 요구사항에 대한 설명
 1. 동시성 이슈
