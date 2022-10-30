@@ -26,6 +26,8 @@ public class PlaceService {
     private final NaverClient naverClient;
     private final KeywordService keywordService;
 
+    // 카카오 - 10, 네이버 - 01 비트를 사용합니다.
+    // 더 높은 우선순위 검색포털이 추가된다면 100 을 추가하면 됩니다.
     private static final int KAKAO_BIT = 1 << 1;
     private static final int NAVER_BIT = 1;
 
@@ -40,6 +42,7 @@ public class PlaceService {
         }
     }
 
+    // 카카오 장소 검색 결과를 placeMap 에 추가
     private void insertKakaoPlaces(CommonResponse kakaoResponse, Map<String, CommonPlace> placeMap) {
         if (kakaoResponse != null && !CollectionUtils.isEmpty(kakaoResponse.getPlaces())) {
             List<CommonPlace> kakaoPlaces = kakaoResponse.getPlaces();
@@ -56,6 +59,7 @@ public class PlaceService {
         }
     }
 
+    // 네이버 장소 검색 결과를 placeMap 에 추가
     private void insertNaverPlaces(CommonResponse naverResponse, Map<String, CommonPlace> placeMap) {
         if (naverResponse != null && !CollectionUtils.isEmpty(naverResponse.getPlaces())) {
             List<CommonPlace> naverPlaces = naverResponse.getPlaces();
@@ -81,8 +85,11 @@ public class PlaceService {
     public Mono<CommonResponse> searchPlace(String keyword) {
         Mono<CommonResponse> kakaoResult = kakaoClient.searchPlace(keyword);
         Mono<CommonResponse> naverResult = naverClient.searchPlace(keyword);
+
+        // 키워드 빈도 증가
         keywordService.incKeyword(keyword);
 
+        // 카카오와 네이버 장소 검색을 비동기로 합쳐서 처리
         return Mono.zip(kakaoResult, naverResult).map(tuple -> {
             CommonResponse kakaoResponse = tuple.getT1();
             CommonResponse naverResponse = tuple.getT2();
@@ -106,13 +113,5 @@ public class PlaceService {
 
             return ret;
         });
-    }
-
-    public Mono<CommonResponse> searchKakaoPlace(String keyword) {
-        return kakaoClient.searchPlace(keyword);
-    }
-
-    public Mono<CommonResponse> searchNaverPlace(String keyword) {
-        return naverClient.searchPlace(keyword);
     }
 }

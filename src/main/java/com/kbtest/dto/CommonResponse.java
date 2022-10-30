@@ -12,6 +12,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CommonResponse {
+    // 네이버/카카오를 모두 지원하기 위한 포맷입니다.
+    
     @JsonProperty("places")
     @JsonAlias({ "documents", "items" })
     List<CommonPlace> places = new ArrayList<>();
