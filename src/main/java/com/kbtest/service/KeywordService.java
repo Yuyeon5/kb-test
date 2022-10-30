@@ -64,7 +64,7 @@ public class KeywordService {
       ret.add(toAdd);
     }
 
-    Collections.sort(ret, (a, b) -> a.getFrequency() - b.getFrequency());
+    Collections.sort(ret, (a, b) -> b.getFrequency() - a.getFrequency());
 
     return ret;
   }

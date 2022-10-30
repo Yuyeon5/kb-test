@@ -20,14 +20,4 @@ public class PlaceController {
     public Mono<CommonResponse> searchPlace(@RequestParam("q") String keyword) {
         return service.searchPlace(keyword);
     }
-
-    @GetMapping("/v1/kakao/place")
-    public Mono<CommonResponse> testKakaoPlace(@RequestParam("q") String keyword) {
-        return service.searchKakaoPlace(keyword);
-    }
-
-    @GetMapping("/v1/naver/place")
-    public Mono<CommonResponse> testNaverPlace(@RequestParam("q") String keyword) {
-        return service.searchNaverPlace(keyword);
-    }
 }
