@@ -2,18 +2,15 @@ package com.kbtest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public class Keyword implements Comparable<Keyword> {
-  @JsonProperty("keyword")
-  String keyword;
+@AllArgsConstructor
+public class Keyword {
+  @JsonProperty("word")
+  String word;
 
   @JsonProperty("frequency")
   int frequency;
-
-  @Override
-  public int compareTo(Keyword other) {
-    return other.frequency - this.frequency;
-  }
 }

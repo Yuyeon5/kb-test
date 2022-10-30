@@ -1,11 +1,13 @@
 package com.kbtest.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.PriorityBlockingQueue;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.kbtest.dto.Keyword;
@@ -16,7 +18,7 @@ public class KeywordService {
   private static final int NUMBER_KEYWORD = 10;
 
   private final ConcurrentHashMap<String, Integer> keywordMap = new ConcurrentHashMap<>();
-  private final PriorityBlockingQueue<Keyword> keywordQueue = new PriorityBlockingQueue<>();
+  private final Map<String, Integer> topKeywordMap = new HashMap<>();
 
   private int threshold = 0;
 
@@ -29,13 +31,41 @@ public class KeywordService {
     }
 
     // Update top keyword map
-    if (newValue > threshold) {
-      topKeywordMap.put(keyword, newValue);
+    incTopKeyword(keyword, newValue);
+  }
+
+  private synchronized void incTopKeyword(String keyword, Integer freq) {
+    if (threshold < freq) {
+      topKeywordMap.put(keyword, freq);
+
+      if (topKeywordMap.size() > NUMBER_KEYWORD) {
+        // Remove one item
+        String toRemove = StringUtils.EMPTY;
+        for (Map.Entry<String, Integer> entry : topKeywordMap.entrySet()) {
+          if (entry.getValue() == threshold) {
+            toRemove = entry.getKey();
+            break;
+          }
+        }
+
+        topKeywordMap.remove(toRemove);
+
+        // Update threshold
+        threshold = topKeywordMap.values().stream().mapToInt(v -> v).min().orElse(0);
+      }
     }
   }
 
-  public List<Keyword> getTopKeywords() {
-    
+  public synchronized List<Keyword> getTopKeywords() {
+    List<Keyword> ret = new ArrayList<>();
 
+    for (Map.Entry<String, Integer> entry : topKeywordMap.entrySet()) {
+      Keyword toAdd = new Keyword(entry.getKey(), entry.getValue());
+      ret.add(toAdd);
+    }
+
+    Collections.sort(ret, (a, b) -> a.getFrequency() - b.getFrequency());
+
+    return ret;
   }
 }
